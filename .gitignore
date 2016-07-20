@@ -17,3 +17,5 @@ nosetests.xml
 logs
 sys_test.log
 
+# IDE settings
+.idea/*
