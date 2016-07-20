@@ -69,29 +69,11 @@ The steps that occur when a user requests that a Cinder backup be restored.
 Web UI
 ------
 
-The plugin adds additional configuration options to Fuel Master Web UI.
+Fuel Web UI is extended with plugin-specific settings.
 
-The plugin settings are:
+The settings are:
 
-* Google Cloud Storage Fuel Plugin to enable the plugin.
-
-* GCS Credentials File
-
-  * name: backup_gcs_credential_file
-  * label: GCS Credentials File
-  * description: Denotes the full path of the json file of the Google service account. Defaults to ‘/etc/gcs_credentials.json’ if empty.
-  * type: text
-  * value: ‘/etc/gcs_credentials.json’
-  * regexp: valid Unix path
-
-* GCS Bucket
-
-  * name: backup_gcs_bucket
-  * label: GCS Bucket
-  * description: GCS bucket name to use for backup. Please refer to the official bucket naming guidelines https://cloud.google.com/storage/docs/naming
-  * type: text
-  * value: ‘’
-  * regexp: match https://cloud.google.com/storage/docs/naming
+* A checkbox to enable Google Cloud Storage Fuel Plugin.
 
 * GCS Project ID
 
@@ -102,59 +84,14 @@ The plugin settings are:
   * value: ‘’
   * regexp: is like GCS Project ID
 
-* GCS Object Size
+* GCS Bucket
 
-  * name: backup_gcs_object_size
-  * label: GCS Object Size
-  * description: The size in bytes of GCS backup objects in bytes. Must be a multiple of GCS Block Size. Defaults to 52428800 bytes if empty.
+  * name: backup_gcs_bucket
+  * label: GCS Bucket
+  * description: GCS bucket name to use for backup. Please refer to the official bucket naming guidelines https://cloud.google.com/storage/docs/naming
   * type: text
-  * value: 52428800
-  * regexp: is a number within allowed range OR is empty
-
-* GCS Block Size
-
-  * name: backup_gcs_block_size
-  * label: GCS Block Size
-  * description: The change tracking size for incremental backup in bytes. Defaults to 327678 bytes if empty.
-  * type: text
-  * value: 327678
-  * regexp: is a number within allowed range OR is empty
-* HTTP User-Agent
-
-  * name: backup_gcs_user_agent
-  * label: HTTP User-Agent
-  * description: HTTP User-Agent string for the GCS API
-  * type: text
-  * value: not defined
-  * regexp: a valid string for HTTP User-Agent OR empty
-
-* GCS Reader Chunk Size
-
-  * name: backup_gcs_reader_chunk_size
-  * label: GCS Reader Chunk Size
-  * description: Chunk size for GCS object downloads in bytes. Defaults to 2097152 bytes if empty.
-  * type: text
-  * value: 2097152
-  * regexp: a number within allowed range OR empty
-
-* GCS Writer Chunk Size
-
-  * name: backup_gcs_writer_chunk_size
-  * label: GCS Writer Chunk Size
-  * description: Chunk size for GCS object uploads in bytes. Pass in a value of -1 to cause the file to be uploaded as a single chunk. Defaults to 2097152 bytes if empty.
-  * type: text
-  * value: 2097152
-  * regexp: a number within allowed range OR empty OR -1
-
-
-* GCS Retries Number
-
-  * name: backup_gcs_num_retries
-  * label: GCS Retries Number
-  * description: Number of times to retry transfers. Defaults to 3 if empty.
-  * type: text
-  * value: 3
-  * regexp: valid number OR empty
+  * value: ‘’
+  * regexp: match https://cloud.google.com/storage/docs/naming
 
 * GCS Bucket Location
 
@@ -175,23 +112,6 @@ The plugin settings are:
   * regexp: a valid storage class
 
 
-* GCS Retry Error Codes
-
-  * name: backup_gcs_retry_error_codes
-  * label: GCS Retry Error Codes
-  * description: List of GCS error codes for which to initiate a retry. Defaults to [‘429’] if empty.
-  * type: text
-  * value: [‘429’]
-  * regexp: valid list of numbers
-
-* GCS progress Timer
-
-  * name: backup_gcs_enable_progress_timer
-  * label: 
-  * description: Enable or Disable the timer to send the periodic progress notifications to Ceilometer when backing up the volume to the GCS backend storage.
-  * type: checkbox
-  * value: true
-
 Nailgun
 -------
 None
@@ -202,7 +122,7 @@ None
 
 REST API
 --------
-GCS plugin will add Google Python api client to controller nodes, enabling proper communication between cinder components and google cloud services.
+None
 
 Orchestration
 -------------
@@ -218,13 +138,11 @@ None
 
 Limitations
 -----------
-
-Cinder does not support multiple backup backends at the same time so switching backup backend for a cloud with backup may not be possible without losing current backups.
+Cinder does not support multiple backup backends at the same time so switching backup backend for a cloud with backup enabled may not be possible without losing current backups.
 
 Alternatives
 ============
 The plugin can also be implemented as a part of Fuel core but it was decided to create a plugin as any new additional functionality makes a project and testing more difficult which is an additional risk for the Fuel release.
-
 
 Upgrade impact
 ==============
@@ -240,7 +158,7 @@ None
 
 End user impact
 ===============
-End user will have more distributed and hybrid cloud, backup storage function will be delegated to the reliable external storage service provider
+End user will have more distributed and hybrid cloud, backup storage function will be delegated to the reliable external storage service provider.
 
 Performance impact
 ==================
@@ -344,11 +262,10 @@ Dependencies
 * At least Fuel 9.0
 * At least OpenStack Mitaka
 * Internet connection on Cinder and Compute nodes
-* GCS credentials manual upload
+* file with GCS credentials uploaded to Fuel master node
 
 Testing
 =======
-Probably we should add custom ostf or tempest tests to work with GCS. Will investigate how plugin should work according plugin proposal
 * Block storage operations verified using Tempest framework with specific test cases:
 - Create,delete, attach, detach volume
 - Create, delete, list snapshots and create volume from snapshot 
