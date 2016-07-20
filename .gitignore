@@ -1,3 +1,19 @@
 .tox
 .build
 *.pyc
+
+# Packages
+*.rpm
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Logs
+logs
+sys_test.log
+
