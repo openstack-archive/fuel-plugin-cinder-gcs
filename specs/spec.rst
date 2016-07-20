@@ -2,37 +2,50 @@
 Google Cloud Storage Fuel Plugin
 ================================
 
-The plugin allows Fuel to deploy OpenStack with support of OpenStack Cinder backup driver for Google Cloud Storage.
+The GCS plugin allows Fuel to deploy OpenStack with support of OpenStack Cinder backup driver
+for Google Cloud Storage.
 
 Problem description
 ===================
-Since Mitaka release OpenStack supports Cinder backup driver for Google Cloud Storage.
+Since Mitaka release, OpenStack supports Cinder backup driver for Google Cloud Storage.
 
-The ones who decided to store backups of their OpenStack VMs in Google Cloud Storage have to configure Cinder and OpenStack Cinder backup driver for Google Cloud Storage on a number of OpenStack nodes manually. 
+The user who decided to store backups of their OpenStack VMs in Google Cloud Storage have to
+configure Cinder and OpenStack Cinder backup driver for Google Cloud Storage on a number of
+OpenStack nodes manually.
 
-Fuel is a widely used automation tool for deploying OpenStack clouds but currently doesn’t support the backup driver installation and configuration.
+Fuel is a widely used automation tool for deploying OpenStack clouds but currently doesn’t support
+the backup driver installation and configuration.
 
-As backups often need to be automated sample YAML files with descriptions of Mistral workflows is required too.
+As backups often need to be automated sample YAML files with descriptions of Mistral workflows is
+required too.
 
 Proposed changes
 ================
 
-Implement Fuel plugin to automate Cinder and Cinder backup driver for Google Cloud Storage installation and configuration. Provide sample Mistral workflows.
+Implement Fuel plugin to automate Cinder and Cinder backup driver for Google Cloud Storage
+installation and configuration.
+Provide sample Mistral workflows.
 
-OpenStack backups are stored as objects in object storages like Swift or Ceph. Also other objects are stored in object storage. This plugin impacts only backups. Other objects will be stored in the object storage selected during the environment creation.
+OpenStack backups are stored as objects in object storages like Swift or Ceph.
+Also other objects are stored in object storage. This plugin impacts only backups.
+Other objects will be stored in the object storage selected during the environment creation.
 
-Before deployment user has to download and install GCS plugin into fuel master. Driver enablement and configuration will be done by Puppet manifests included in plugin. The cinder plugin for Google backup is included in Cinder package for Mitaka.
+Before deployment user has to download and install GCS plugin into fuel master.
+Driver enablement and configuration will be done by Puppet manifests included in plugin.
 
-After installation of plugin RPM package, additional file must be placed manually on master node. This file contains GCS service account credentials in JSON format, and will be copied automatically to cinder nodes.
+The cinder plugin for Google backup is included in Cinder package for Mitaka.
+
+After installation of plugin RPM package, additional file must be placed manually on master node.
+This file contains GCS service account credentials in JSON format, and will be copied automatically
+to cinder nodes.
 
 The plugin will deploy changes in the following way
 * Copy credentials file to all cinder nodes
 * Install python packages for Google Cloud Storage client on cinder nodes
 * Modify cinder.conf:
-
   * Enable google backup driver in backup_driver variable
-  * Set up configuration options for driver such as bucket name, project ID, path to credentials file
-
+  * Set up configuration options for driver such as bucket name, project ID, path to credentials
+  file
 * Restart cinder services to use updated parameters
 
 Volume Backup Workflow
@@ -40,58 +53,58 @@ Volume Backup Workflow
 
 The steps that occur when a user requests that a Cinder volume be backed up.
 
-#. User request to backup a Cinder volume by invoking REST API (client may use python-cinderclient CLI utility).
-#. cinder-api process validates request, user credentials; once validated, posts message to backup manager over AMQP.
-#. cinder-backup reads message from queue, creates a database record for the backup and fetches information from the database for the volume to be backed up.
-#. cinder-backup invokes the backup_volume method of the Cinder volume driver corresponding to volume to be backed up, passing the backup record and the connection for the backup service to be used.
+#. User request to backup a Cinder volume by invoking REST API (client may use python-cinderclient
+CLI utility).
+#. cinder-api process validates request, user credentials; once validated, posts message to backup
+manager over AMQP.
+#. cinder-backup reads message from queue, creates a database record for the backup and fetches
+information from the database for the volume to be backed up.
+#. cinder-backup invokes the backup_volume method of the Cinder volume driver corresponding
+to volume to be backed up, passing the backup record and the connection for the backup service
+to be used.
 #. The appropriate Cinder volume driver attaches to the source Cinder volume.
-#. The volume driver invokes the backup method for the configured backup service, handing off the volume attachment.
+#. The volume driver invokes the backup method for the configured backup service, handing off
+the volume attachment.
 #. The backup service transfers the Cinder volume's data and metadata to the GCS using GCS driver.
-#. The backup service updates the database with the completed record for this backup and posts response information to cinder-api process via AMQP queue.
-#. cinder-api process reads response message from queue and passes results in RESTful response to the client.
+#. The backup service updates the database with the completed record for this backup and posts
+response information to cinder-api process via AMQP queue.
+#. cinder-api process reads response message from queue and passes results in RESTful response
+to the client.
 
 Volume Restore Workflow
 -----------------------
 
 The steps that occur when a user requests that a Cinder backup be restored.
 
-#. User request to restore a Cinder volume by invoking REST API (client may use python-cinderclient CLI utility).
-#. cinder-api process validates request, user credentials; once validated, posts message to backup manager over AMQP.
-#. cinder-backup reads message from queue, fetches the database record for the backup and a new or preexisting volume database record, depending on whether a pre-existing volume was requested or not.
-#. cinder-backup invokes the backup_restore method of the Cinder volume driver corresponding to volume to be backed up, passing the backup record and the connection for the backup service to be used
+#. User request to restore a Cinder volume by invoking REST API (client may use python-cinderclient
+CLI utility).
+#. cinder-api process validates request, user credentials; once validated, posts message to backup
+manager over AMQP.
+#. cinder-backup reads message from queue, fetches the database record for the backup and a new
+or preexisting volume database record, depending on whether a pre-existing volume was
+requested or not.
+#. cinder-backup invokes the backup_restore method of the Cinder volume driver corresponding
+to volume to be backed up, passing the backup record and the connection for the backup service
+to be used
 #. The appropriate Cinder volume driver attaches to the destination Cinder volume.
-#. The volume driver invokes the restore method for the configured backup service, handing off the volume attachment.
-#. The backup service uses GCS driver to locate the backup metadata and data for the Cinder volume in the GCS and uses these to restore the destination Cinder volume to a state matching the source volume for the original backup operation at the time of that operation.
+#. The volume driver invokes the restore method for the configured backup service, handing off
+the volume attachment.
+#. The backup service uses GCS driver to locate the backup metadata and data for the Cinder volume
+in the GCS and uses these to restore the destination Cinder volume to a state matching the source
+volume for the original backup operation at the time of that operation.
 #. The backup service posts response information to cinder-api process via AMQP queue.
-#. cinder-api process reads response message from cinder-backup from queue and passes results in RESTful response to the client.
+#. cinder-api process reads response message from cinder-backup from queue and passes results
+in RESTful response to the client.
 
 
 Web UI
 ------
 
-The plugin adds additional configuration options to Fuel Master Web UI.
+Fuel Web UI is extended with plugin-specific settings.
 
-The plugin settings are:
+The settings are:
 
-* Google Cloud Storage Fuel Plugin to enable the plugin.
-
-* GCS Credentials File
-
-  * name: backup_gcs_credential_file
-  * label: GCS Credentials File
-  * description: Denotes the full path of the json file of the Google service account. Defaults to ‘/etc/gcs_credentials.json’ if empty.
-  * type: text
-  * value: ‘/etc/gcs_credentials.json’
-  * regexp: valid Unix path
-
-* GCS Bucket
-
-  * name: backup_gcs_bucket
-  * label: GCS Bucket
-  * description: GCS bucket name to use for backup. Please refer to the official bucket naming guidelines https://cloud.google.com/storage/docs/naming
-  * type: text
-  * value: ‘’
-  * regexp: match https://cloud.google.com/storage/docs/naming
+* A checkbox to enable Google Cloud Storage Fuel Plugin.
 
 * GCS Project ID
 
@@ -102,65 +115,22 @@ The plugin settings are:
   * value: ‘’
   * regexp: is like GCS Project ID
 
-* GCS Object Size
+* GCS Bucket
 
-  * name: backup_gcs_object_size
-  * label: GCS Object Size
-  * description: The size in bytes of GCS backup objects in bytes. Must be a multiple of GCS Block Size. Defaults to 52428800 bytes if empty.
+  * name: backup_gcs_bucket
+  * label: GCS Bucket
+  * description: GCS bucket name to use for backup. Please refer to the official bucket naming
+  guidelines https://cloud.google.com/storage/docs/naming
   * type: text
-  * value: 52428800
-  * regexp: is a number within allowed range OR is empty
-
-* GCS Block Size
-
-  * name: backup_gcs_block_size
-  * label: GCS Block Size
-  * description: The change tracking size for incremental backup in bytes. Defaults to 327678 bytes if empty.
-  * type: text
-  * value: 327678
-  * regexp: is a number within allowed range OR is empty
-* HTTP User-Agent
-
-  * name: backup_gcs_user_agent
-  * label: HTTP User-Agent
-  * description: HTTP User-Agent string for the GCS API
-  * type: text
-  * value: not defined
-  * regexp: a valid string for HTTP User-Agent OR empty
-
-* GCS Reader Chunk Size
-
-  * name: backup_gcs_reader_chunk_size
-  * label: GCS Reader Chunk Size
-  * description: Chunk size for GCS object downloads in bytes. Defaults to 2097152 bytes if empty.
-  * type: text
-  * value: 2097152
-  * regexp: a number within allowed range OR empty
-
-* GCS Writer Chunk Size
-
-  * name: backup_gcs_writer_chunk_size
-  * label: GCS Writer Chunk Size
-  * description: Chunk size for GCS object uploads in bytes. Pass in a value of -1 to cause the file to be uploaded as a single chunk. Defaults to 2097152 bytes if empty.
-  * type: text
-  * value: 2097152
-  * regexp: a number within allowed range OR empty OR -1
-
-
-* GCS Retries Number
-
-  * name: backup_gcs_num_retries
-  * label: GCS Retries Number
-  * description: Number of times to retry transfers. Defaults to 3 if empty.
-  * type: text
-  * value: 3
-  * regexp: valid number OR empty
+  * value: ‘’
+  * regexp: match https://cloud.google.com/storage/docs/naming
 
 * GCS Bucket Location
 
   * name: backup_gcs_bucket_location
   * label: GCS Bucket Location
-  * description: Location of GCS bucket. Details at https://cloud.google.com/storage/docs/bucket-locations . Defaults to ‘us’ if empty.
+  * description: Location of GCS bucket. 
+  Details at https://cloud.google.com/storage/docs/bucket-locations . Defaults to ‘us’ if empty.
   * type: text
   * value: ‘us’
   * regexp: alphanumeric with dashes
@@ -175,23 +145,6 @@ The plugin settings are:
   * regexp: a valid storage class
 
 
-* GCS Retry Error Codes
-
-  * name: backup_gcs_retry_error_codes
-  * label: GCS Retry Error Codes
-  * description: List of GCS error codes for which to initiate a retry. Defaults to [‘429’] if empty.
-  * type: text
-  * value: [‘429’]
-  * regexp: valid list of numbers
-
-* GCS progress Timer
-
-  * name: backup_gcs_enable_progress_timer
-  * label: 
-  * description: Enable or Disable the timer to send the periodic progress notifications to Ceilometer when backing up the volume to the GCS backend storage.
-  * type: checkbox
-  * value: true
-
 Nailgun
 -------
 None
@@ -202,7 +155,7 @@ None
 
 REST API
 --------
-GCS plugin will add Google Python api client to controller nodes, enabling proper communication between cinder components and google cloud services.
+None
 
 Orchestration
 -------------
@@ -218,13 +171,14 @@ None
 
 Limitations
 -----------
-
-Cinder does not support multiple backup backends at the same time so switching backup backend for a cloud with backup may not be possible without losing current backups.
+Cinder does not support multiple backup backends at the same time so switching backup backend for
+a cloud with backup enabled may not be possible without losing current backups.
 
 Alternatives
 ============
-The plugin can also be implemented as a part of Fuel core but it was decided to create a plugin as any new additional functionality makes a project and testing more difficult which is an additional risk for the Fuel release.
-
+The plugin can also be implemented as a part of Fuel core but it was decided to create a plugin
+as any new additional functionality makes a project and testing more difficult which is
+an additional risk for the Fuel release.
 
 Upgrade impact
 ==============
@@ -232,7 +186,8 @@ Compatibility of new Fuel components and the Plugin should be checked before upg
 
 Security impact
 ===============
-Google Cloud Storage credentials are stored on Fuel Master and Cinder/Compute nodes and need to be protected from unauthorized use. 
+Google Cloud Storage credentials are stored on Fuel Master and Cinder/Compute nodes and need to be
+protected from unauthorized use.
 
 Notifications impact
 ====================
@@ -240,7 +195,8 @@ None
 
 End user impact
 ===============
-End user will have more distributed and hybrid cloud, backup storage function will be delegated to the reliable external storage service provider
+End user will have more distributed and hybrid cloud, backup storage function will be delegated
+to the reliable external storage service provider.
 
 Performance impact
 ==================
@@ -248,7 +204,8 @@ Backup operation performance depends on Google Cloud Storage plan and the Intern
 
 Deployment impact
 =================
-The plugin can be installed and enabled either during Fuel Master installation or after an environment is deployed.
+The plugin can be installed and enabled either during Fuel Master installation or after
+an environment is deployed.
 
 Developer impact
 ================
@@ -333,7 +290,8 @@ Work Items
 
 
 * Prepare development environment
-* Create Fuel plugin bundle which allows setting plugin parameters and pass them to Openstack nodes via Hiera
+* Create Fuel plugin bundle which allows setting plugin parameters and pass them to Openstack nodes
+via Hiera
 * Implement Puppet manifests to configure Cinder and Google Cloud Storage backup driver
 * Test Google Cloud Storage Fuel plugin
 * Prepare Documentation
@@ -344,18 +302,18 @@ Dependencies
 * At least Fuel 9.0
 * At least OpenStack Mitaka
 * Internet connection on Cinder and Compute nodes
-* GCS credentials manual upload
+* file with GCS credentials uploaded to Fuel master node
 
 Testing
 =======
-Probably we should add custom ostf or tempest tests to work with GCS. Will investigate how plugin should work according plugin proposal
 * Block storage operations verified using Tempest framework with specific test cases:
 - Create,delete, attach, detach volume
 - Create, delete, list snapshots and create volume from snapshot 
 - Create volume from image, from snapshot, from volume (clone)
 - Create image from volume
 
-* System tests including deployment with different options enabled and plugin installation included, both LVM and Ceph options have to be verified as a Cinder backend for all this cases:
+* System tests including deployment with different options enabled and plugin installation included,
+both LVM and Ceph options have to be verified as a Cinder backend for all this cases:
 - Install plugin and deploy environment
 - Install plugin and deploy environment with controller/cinder role assigned to a node
 - Install plugin and deploy environment with compute/cinder role assigned to a node
@@ -387,5 +345,6 @@ Acceptance criterias
 References
 ==========
 
-OpenStack users: Backup your Cinder volumes to Google Cloud Storage https://cloudplatform.googleblog.com/2016/04/OpenStack-users-backup-your-Cinder-volumes-to-Google-Cloud-Storage.html
+OpenStack users: Backup your Cinder volumes to Google Cloud Storage
+https://cloudplatform.googleblog.com/2016/04/OpenStack-users-backup-your-Cinder-volumes-to-Google-Cloud-Storage.html
 
