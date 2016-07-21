@@ -216,6 +216,64 @@ Fuel Library
 ------------
 None
 
+Mistral sample workbook
+-----------------------
+
+The plugin provides a sample Mistral workbook written in Mistral DSL v2.
+
+The workbook contains two workflows:
+  - create_backups_workflow
+  - clean_backups_workflow
+
+create_backups_workflow is to be scheduled by Mistral to run every day. Backups are created accordingly to the rules:
+  - a full backup is created if the previous full backup is older than 6 days or does not exists
+  - otherwise an incremental backup is created
+create_backups_workflow accepts the following input parameters:
+  - tenanat_id (mandatory)
+  - volume_id - list of volume identifiers. Optional. Will backup all tenant’s volumes if not provided.
+  - report_level - report all or only failed backups
+  - report_to - e-mail address to send reports to
+create_backups_workflow tasks:
+  - get_volumes_list
+    - provides a list of volume_id to backup
+  - full_or_incremenetal
+    - provides list of dictionaries with keys volume_id and  should_be_incremental
+  - create_snapshot
+    - creates volumes snapshots
+  - backup
+    - backups the snapshots
+    - invokes report and clean_snapshot tasks
+  - clean_snapshot
+    - removes volumes snapshots
+  - report
+    - sends notification by e-mail
+
+clean_backups_workflow cleans backups and is to be scheduled by Mistral to run periodically. The following sequence of backups per volume are kept:
+  - all full and incremental backups for the last 7 days
+  - all full backups for the last month
+  - every first full backup per month for the last year
+
+All other backups are deleted.
+
+clean_backups_workflow accepts the following input parameters:
+  - tenanat_id (mandatory)
+  - volume_id - list of volume identifiers. Optional. Will backup all tenant’s volumes if not provided.
+  - report_level - report all or only failed backups
+  - report_to - e-mail address to send reports to
+
+clean_backups_workflow tasks:
+  - get_volumes_list
+    - provides list of volume_id to clean backup for
+  - get_backup_list
+    - for each volume provides backups list
+  - detect_backups_to_clean
+    - creates a list of backups to clean
+    - can be a set of sequent tasks
+  - clean_backups
+    - says OpenStack to remove backups
+  - report
+    - sends notification by e-mail
+
 Limitations
 -----------
 
