@@ -1,62 +1,30 @@
-# These tasks will be merged into deployment graph. Here you
-# can specify new tasks for any roles, even built-in ones.
-
-- id: fuel-plugin-cinder-gcs_role
-  type: group
-  role: [fuel-plugin-cinder-gcs_role]
+- id: gcs_copy_keys
+  type: copy_files
+  role: ['primary-controller','controller','cinder']
+  requires: [gcs_cinder_conf]
   parameters:
-    strategy:
-      type: parallel
+    files:
+      - src: /var/lib/fuel/keys/{CLUSTER_ID}/gcs/credentials.json
+        dst: /var/lib/astute/gcs/credentials.json
+    permissions: '0600'
+    dir_permissions: '0700'
 
-- id: fuel-plugin-cinder-gcs-deployment-puppet
+- id: gcs_cinder_conf
   type: puppet
-  role: [fuel-plugin-cinder-gcs_role]
-
-# If you do not want to use task-based deployment that is introduced as experimental
-# in fuel v8.0 comment code section below this comment, uncomment two lines below it
-# and do the same for tasks below.
-
-  version: 2.0.0
-  cross-depends:
-    - name: deploy_start
-  cross-depended-by:
-    - name: deploy_end
-#  requires: [deploy_start] # version 1.0.0
-#  required_for: [deploy_end]
-
+  role: ['primary-controller','controller','cinder']
+  requires: [top-role-cinder]
   parameters:
-    puppet_manifest: "deploy.pp"
-    puppet_modules: "."
-    timeout: 3600
+    puppet_manifest: cinder_conf.pp
+    puppet_modules: puppet/modules:/etc/puppet/modules
+    timeout: 300
+  condition:
+    yaql_exp: $.storage.volumes_ceph or ('cinder' in $.roles )
 
-#- id: fuel-plugin-cinder-gcs-post-deployment-sh
-#  type: shell
-#  role: [fuel-plugin-cinder-gcs_role]
-#  version: 2.0.0
-#  cross-depends:
-#    - name: post_deployment_start
-#  cross-depended-by:
-#    - name: post_deployment_end
-# #  requires: [post_deployment_start]
-# #  required_for: [post_deployment_end]
-#  parameters:
-#    cmd: echo post_deployment_task_executed > /tmp/post_deployment
-#    retries: 3
-#    interval: 20
-#    timeout: 180
-
-#- id: fuel-plugin-cinder-gcs-pre-deployment-sh
-#  type: shell
-#  role: [fuel-plugin-cinder-gcs_role]
-#  version: 2.0.0
-#  cross-depends:
-#    - name: pre_deployment_start
-#  cross-depended-by:
-#    - name: pre_deployment_end
-# #  requires: [pre_deployment_start]
-# #  required_for: [pre_deployment_end]
-#  parameters:
-#    cmd: echo pre_deployment_task_executed > /tmp/pre_deployment
-#    retries: 3
-#    interval: 20
-#    timeout: 180
+- id: gcs_install_packages
+  type: puppet
+  role: ['primary-controller','controller','cinder']
+  requires: [gcs_cinder_conf]
+  parameters:
+    puppet_manifest: install_packages.pp
+    puppet_modules: puppet/modules:/etc/puppet/modules
+    timeout: 300
