@@ -1,11 +1,44 @@
 attributes:
-  metadata:
-    # Settings group can be one of "general", "security", "compute", "network",
-    # "storage", "logging", "openstack_services" and "other".
-    group: 'other'
-  fuel-plugin-cinder-gcs_text:
-    value: 'Set default value'
-    label: 'Text field'
-    description: 'Description for text field'
-    weight: 25
+  backup_gcs_bucket:
+    value: ''
+    label: 'GCS bucket name'
+    description: ''
+    weight: 15
     type: "text"
+    regex:
+      source: '^(?!\s*$).+'
+      error:  'Enter the value'
+  backup_gcs_project_id:
+    value: ''
+    label: 'GCS project ID'
+    description: ''
+    weight: 10
+    type: "text"
+    regex:
+      source: '^(?!\s*$).+'
+      error:  'Enter the value'
+  backup_gcs_storage_class:
+    value: 'NEARLINE'
+    label: 'GCS storage class'
+    weight: 40
+    type: 'text'
+    description: 'Enter or leave default class of GCS bucket'
+    regex:
+      source: '^(?!\s*$).+'
+      error:  'Enter the value'
+  backup_gcs_bucket_location:
+    type: "text"
+    weight: 50
+    value: "US"
+    label: "GCS buckel location"
+    description: "Enter GCS bucket location"
+    regex:
+      source: '^(?!\s*$).+'
+      error:  'Enter the value'
+  backup_gcs_enable_progress_timer:
+    type: "checkbox"
+    weight: 70
+    value: True
+    label: "GCS progress timer"
+    description: "Timer to send the periodic progress notifications to Ceilometer when backing up the volume."
+
