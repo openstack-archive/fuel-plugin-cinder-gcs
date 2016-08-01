@@ -4,6 +4,8 @@
 # - https://blueprints.launchpad.net/fuel/+spec/component-registry
 # - https://specs.openstack.org/openstack/fuel-specs/specs/8.0/component-registry.html
 
+#Initial upload for component.yaml config file
+
 - name: additional_service:fuel-plugin-cinder-gcs
   compatible: []
   requires: []
