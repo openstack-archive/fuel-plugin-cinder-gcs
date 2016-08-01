@@ -1,11 +1,218 @@
 attributes:
-  metadata:
-    # Settings group can be one of "general", "security", "compute", "network",
-    # "storage", "logging", "openstack_services" and "other".
-    group: 'other'
-  fuel-plugin-cinder-gcs_text:
-    value: 'Set default value'
-    label: 'Text field'
-    description: 'Description for text field'
-    weight: 25
+  backup_gcs_project_id:
+    value: ''
+    label: 'GCS project ID'
+    description: ''
+    weight: 10
     type: "text"
+    regex:
+      source: '^[A-Za-z\d_-]+$'
+      error:  'The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
+  backup_gcs_bucket:
+    value: ''
+    label: 'GCS bucket name'
+    description: ''
+    weight: 15
+    type: "text"
+    regex:
+      source: '^[A-Za-z\d_-]+$'
+      error:  'The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
+  backup_gcs_storage_class:
+    value: 'NEARLINE'
+    label: 'GCS storage class'
+    weight: 40
+    type: 'select'
+    description: 'Storage class of GCS bucket'
+    values:
+      - data: 'NEARLINE'
+        label: 'NEARLINE'
+      - data: 'STANDARD'
+        label: 'STANDARD'
+      - data: 'DURABLE_REDUCED_AVAILABILITY'
+        label: 'DURABLE_REDUCED_AVAILABILITY'
+  backup_gcs_bucket_location:
+    type: "text"
+    weight: 50
+    value: "US"
+    label: "GCS bucket location"
+    description: "Enter GCS bucket location"
+    regex:
+      source: '^[A-Za-z\d_-]+$'
+      error:  'The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
+  gcs_account_type:
+    label: "GCS Account type"
+    description: "type parameter value from the GCS credentials file"
+    type: text
+    weight: 51
+    value: 'service_account'
+    regex:
+      source: '^[A-Za-z\d_-]+$'
+      error:  'The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
+  gcs_private_key_id:
+    label: "Private Key ID"
+    description: "Private_key_id parameter value from the GCS credentials file."
+    type: text
+    weight: 51
+    value: ''
+    regex:
+      source: '^[A-Za-z\d]+$'
+      error: 'Only alphanumberic charaters are allowed'
+  gcs_private_key:
+    label: "Private Key"
+    description: "Private_key parameter value from the GCS credentials file."
+    type: password
+    weight: 52
+    value: ''
+    regex:
+      source: '^.+$'
+      error: 'Should not be empty'
+  gcs_client_email:
+    label: "Client E-mail"
+    description: "Client_email parameter value from the GCS credentials file."
+    type: text
+    weight: 53
+    value: ''
+    regex:
+      source: '^.+@(.*\..+)+$'
+      error: 'Please enter correct e-mail address'
+  gcs_client_id:
+    label: "Client ID"
+    description: "Client_id parameter value from the GCS credentials file."
+    type: text
+    weight: 54
+    value: ''
+    regex:
+      source: '^\d+$'
+      error: 'Only integers [1-9] are allowed'
+  gcs_auth_uri:
+    label: "Auth URI"
+    description: "Auth_uri parameter value from the GCS credentials file."
+    type: text
+    weight: 55
+    value: 'https://accounts.google.com/o/oauth2/auth'
+    regex:
+      source: '^https:\/\/.+$'
+      error: 'Please enter valid URI'
+  gcs_token_uri:
+    label: "Token URI"
+    description: "Token_uri parameter value from the GCS credentials file."
+    type: text
+    weight: 56
+    value: 'https://accounts.google.com/o/oauth2/token'
+    regex:
+      source: '^https:\/\/.+$'
+      error: 'Please enter valid URI'
+  gcs_auth_provider_x509_cert_url:
+    label: "Auth Provider X509 Cert URL"
+    description: "Auth_provider_x509_cert_url parameter value from the GCS credentials file."
+    type: text
+    weight: 57
+    value: 'https://www.googleapis.com/oauth2/v1/certs'
+    regex:
+      source: '^https:\/\/.+$'
+      error: 'Please enter valid URI'
+  gcs_client_x509_cert_url:
+    label: "Client X509 Cert URL"
+    description: "Client_x509_cert_url parameter value from the GCS credentials file."
+    type: text
+    weight: 58
+    value: ''
+    regex:
+      source: '^https:\/\/.+$'
+      error: 'Please enter valid URI'
+  backup_gcs_advanced_settings:
+    type: "checkbox"
+    weight: 60
+    value: False
+    label: 'Show advanced settings'
+    description: 'When selected all GCS Cinder driver settings are shown'
+  backup_gcs_object_size:
+    label: 'GCS Object Size'
+    description: 'The size in bytes of GCS backup objects in bytes, must be a multiple of GCS block size value, default: 52428800'
+    type: text
+    value: '52428800'
+    weight: 80
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
+    regex:
+      source: '^[1-9]\d*$'
+      error: 'Must be a possitive integer'
+  backup_gcs_block_size:
+    label: 'GCS Block Size'
+    description: 'The size in bytes that changes are tracked for incremental backups, default: 32768'
+    type: text
+    value: '32768'
+    weight: 75
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
+    regex:
+      source: '^[1-9]\d*$'
+      error: 'Must be a possitive integer'
+  backup_gcs_user_agent:
+    label: 'HTTP User-Agent'
+    description: 'HTTP User-Agent string for the GCS API, default: gcscinder'
+    type: text
+    value: 'gcscinder'
+    weight: 85
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
+  backup_gcs_writer_chunk_size:
+    label: 'GCS writer Chunk Size'
+    description: 'Chunk size for GCS object uploads in bytes, -1 for single chunk, default value: 2097152, maximum value: 52428800'
+    type: text
+    value: '2097152'
+    weight: 90
+    regex:
+      source: '^((-1$)|(([1-9])\d{0,7}$))'
+      error: 'Must be a possitive integer or -1'
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
+  backup_gcs_reader_chunk_size:
+    label: 'GCS Reader Chunk Size'
+    description: 'Chunk size for GCS object downloads in bytes, default: 2097152'
+    type: text
+    value: '2097152'
+    weight: 95
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
+    regex:
+      source: '^((-1$)|(([1-9])\d*$))'
+      error: 'Must be a possitive integer'
+  backup_gcs_retry_error_codes:
+    label: 'GCS Retry Error Codes'
+    description: "List of GCS error codes for which to initiate a retry, default: 429"
+    type: text
+    value: '429'
+    weight: 100
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
+    regex:
+      source: '^([4-5][0-9]{2})(,\s{1}[4-5][0-9]{2})*$'
+      error:  "Enter list of valid error codes, example: 403, 404, 503"
+  backup_gcs_num_retries:
+    label: 'GCS Retries Number'
+    description: 'Number of times to retry transfers'
+    type: text
+    value: '3'
+    weight: 105
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
+    regex:
+      source: '^[1-9]\d{0,2}$'
+      error: 'Must be an integer in range of 1-999'
+  beckup_gcs_enable_progress_timer:
+    type: "checkbox"
+    weight: 110
+    value: True
+    label: "GCS progress update timer"
+    description: "Timer to send the periodic progress notifications to Ceilometer when backing up the volume."
+    restrictions:
+      - condition: "not ( settings:fuel-plugin-cinder-gcs.backup_gcs_advanced_settings.value == true )"
+        action: "hide"
