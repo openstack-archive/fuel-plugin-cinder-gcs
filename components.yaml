@@ -1,12 +1,10 @@
-# This file contains wizard components descriptions that are pretty similar to
-# the `environment_config.yaml`.
-# Please, take a look at following link for the details:
-# - https://blueprints.launchpad.net/fuel/+spec/component-registry
-# - https://specs.openstack.org/openstack/fuel-specs/specs/8.0/component-registry.html
-
-- name: additional_service:fuel-plugin-cinder-gcs
-  compatible: []
+- name: additional_service:fuel-plugin-cinder-gcs                                
+  label: "Enable Google Cloud Storage Fuel plugin"                            
+  description: "Configure Cinder to use Google Cloud Storage backup driver."  
+  compatible:                                                                    
+   - name: 'hypervisor:qemu'                                                     
+   - name: 'storage:block:lvm' 
+   - name: 'storage:block:ceph' 
+   - name: 'additional_service:ceilometer' 
   requires: []
   incompatible: []
-  label: "Plugin label, that will be shown on UI"
-  description: "Component description (optional)"
