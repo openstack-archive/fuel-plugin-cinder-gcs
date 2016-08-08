@@ -16,9 +16,13 @@
 
 import os
 
+from proboscis.asserts import assert_equal
+from proboscis.asserts import assert_false
+
 from fuelweb_test.tests.base_test_case import TestBasic
 from fuelweb_test import logger
 from fuelweb_test.helpers import utils
+from helpers import gcs_settings
 
 
 class GcsTestBase(TestBasic):
@@ -48,3 +52,30 @@ class GcsTestBase(TestBasic):
                              '/var')
         utils.install_plugin_check_code(
             master_remote.host, os.path.basename(os.environ['GCS_PLUGIN_RPM']))
+
+    def verify_defaults(self, cluster_id):
+        """Method designed to verify plugin default values."""
+        attr = self.fuel_web.client.get_cluster_attributes(cluster_id)
+        assert_false(
+            attr['editable']['fuel-plugin-cinder-gcs']['metadata']['enabled'],
+            'Plugin should be disabled by default.')
+        # attr value is being assigned twice in order to fit PEP8 restriction:
+        # lines in file can not be longer than 80 characters.
+        attr = attr['editable']['fuel-plugin-cinder-gcs']['metadata']
+        attr = attr['versions'][0]
+        error_list = []
+        for key in gcs_settings.default_values.keys():
+            next_key = 'value'
+            if key == 'metadata':
+                next_key = 'hot_pluggable'
+            msg = 'Default value is incorrect, got {} = {} instead of {}'
+            try:
+                assert_equal(gcs_settings.default_values[key],
+                             attr[key][next_key],
+                             msg.format(key,
+                                        attr[key][next_key],
+                                        gcs_settings.default_values[key]))
+            except AssertionError as e:
+                error_list.append(''.join(('\n', str(e))))
+        error_msg = ''.join(error_list)
+        assert_equal(len(error_msg), 0, error_msg)
