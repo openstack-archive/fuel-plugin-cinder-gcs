@@ -48,6 +48,7 @@ class CloseSSHConnectionsPlugin(Plugin):
 def import_tests():
     """Import test suite of project."""
     from tests import test_gcs_smoke_bvt
+    from tests import test_gcs_ui_defaults
 
 
 def run_tests():
