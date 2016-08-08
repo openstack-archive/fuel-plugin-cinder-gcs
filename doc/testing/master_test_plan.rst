@@ -220,3 +220,4 @@ An ordinary test cycle for each iteration consists of the following steps:
 -------------
 
 .. include:: test_suite_somke_bvt.rst
+.. include:: test_suite_verify_plugin_default.rst
