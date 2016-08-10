@@ -30,9 +30,9 @@ class GcsTestClass(GcsTestBase):
     """GcsTestBase."""  # TODO(unknown) documentation
 
     @test(depends_on=[SetupEnvironment.prepare_slaves_3],
-          groups=["gcs_deploy_smoke"])
+          groups=["gcs_smoke"])
     @log_snapshot_after_test
-    def gcs_deploy_smoke(self):
+    def gcs_smoke(self):
         """Deploy non HA cluster with GCS plugin installed and enabled.
 
         Scenario:
@@ -80,12 +80,12 @@ class GcsTestClass(GcsTestBase):
             check_services=False
         )
 
-        self.env.make_snapshot("gcs_deploy_smoke")
+        self.env.make_snapshot("gcs_smoke")
 
     @test(depends_on=[SetupEnvironment.prepare_slaves_5],
-          groups=["gcs_deploy_bvt"])
+          groups=["gcs_bvt"])
     @log_snapshot_after_test
-    def gcs_deploy_bvt(self):
+    def gcs_bvt(self):
         """Deploy HA cluster with GCS plugin installed and enabled.
 
         Scenario:
@@ -147,4 +147,4 @@ class GcsTestClass(GcsTestBase):
             cluster_id=cluster_id,
             test_sets=['smoke', 'sanity', 'ha', 'tests_platform',
                        'cloudvalidation'])
-        self.env.make_snapshot("gcs_deploy_bvt")
+        self.env.make_snapshot("gcs_bvt")
