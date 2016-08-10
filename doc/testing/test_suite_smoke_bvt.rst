@@ -10,7 +10,7 @@ Smoke test
 ID
 ##
 
-gcs_deploy_smoke
+gcs_smoke
 
 Description
 ###########
@@ -49,7 +49,7 @@ ID
 ##
 
 
-gcs_deploy_bvt
+gcs_bvt
 
 Description
 ###########
