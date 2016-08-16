@@ -48,10 +48,10 @@ class GcsTestBase(TestBasic):
         """Method designed to install plugin on cluster."""
         master_remote = self.get_remote('master')
         utils.upload_tarball(master_remote.host,
-                             os.environ['GCS_PLUGIN_RPM'],
+                             os.environ['GCS_PLUGIN_PATH'],
                              '/var')
         utils.install_plugin_check_code(
-            master_remote.host, os.path.basename(os.environ['GCS_PLUGIN_RPM']))
+            master_remote.host, os.path.basename(os.environ['GCS_PLUGIN_PATH']))
 
     def verify_defaults(self, cluster_id):
         """Method designed to verify plugin default values."""
