@@ -18,7 +18,7 @@ class gcs::config {
     'DEFAULT/backup_driver':                    value   => $gcs::backup_driver;
     'DEFAULT/backup_gcs_bucket':                value   => $gcs::settings['backup_gcs_bucket'];
     'DEFAULT/backup_gcs_project_id':            value   => $gcs::settings['backup_gcs_project_id'];
-    'DEFAULT/backup_gcs_credentials_file':      value   => $gcs::settings['backup_gcs_credentials_file'];
+    'DEFAULT/backup_gcs_credentials_file':      value   => $gcs::credentials_file;
     'DEFAULT/backup_gcs_bucket_location':       value   => $gcs::settings['backup_gcs_bucket_location'];
     'DEFAULT/backup_gcs_enable_progress_timer': value   => $gcs::settings['backup_gcs_enable_progress_timer'];
     'DEFAULT/backup_gcs_storage_class':         value   => $gcs::settings['backup_gcs_storage_class'];
@@ -31,7 +31,7 @@ class gcs::config {
     'DEFAULT/backup_gcs_retry_error_codes':     value   => $gcs::settings['backup_gcs_retry_error_codes'];
     'DEFAULT/backup_gcs_num_retries':           value   => $gcs::settings['backup_gcs_num_retries'];
   }
-  file { $gcs::credential_file:
+  file { $gcs::credentials_file:
       owner => 'cinder',
       group => 'cinder',
       content => template('gcs/credentials.json.erb'),
