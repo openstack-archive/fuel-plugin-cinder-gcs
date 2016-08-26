@@ -462,10 +462,11 @@ Work Items
 Dependencies
 ============
 
-* At least Fuel 9.0
-* At least OpenStack Mitaka
-* Internet connection on Cinder and Compute nodes
-* file with GCS credentials uploaded to Fuel master node
+* Fuel 9.0
+* Ubuntu 14.04
+* OpenStack Mitaka
+* Internet connection available for Cinder nodes
+* File with credentials for GCS service acccount
 
 Testing
 =======
