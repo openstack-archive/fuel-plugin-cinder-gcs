@@ -19,3 +19,6 @@ sys_test.log
 
 # IDE settings
 .idea/*
+
+# Documentation build files
+doc/user_guide/_build
