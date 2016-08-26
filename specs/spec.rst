@@ -2,9 +2,9 @@
 Google Cloud Storage(GCS) Fuel plugin
 =====================================
 
-Google Cloud Storage(GCS) Fuel plugin allows Fuel to deploy Mirantis OpenStack with
-a possibility to store VM backups in Google Cloud Storage using Cinder Google Cloud Storage backup
-driver.
+Google Cloud Storage(GCS) Fuel plugin allows Fuel to deploy Mirantis OpenStack
+with a possibility to store VM backups in Google Cloud Storage using
+Cinder Google Cloud Storage backup driver.
 
 Problem description
 ===================
@@ -29,20 +29,21 @@ Also other objects are stored in object storage. Fuel GCS plugin impacts only
 backups. Other objects will be stored in the object storage selected during
 the environment creation.
 
-Before deployment user has to download and install the Fuel GCS plugin into Fuel Master.
-Driver inclusion and configuration will be done by Puppet manifests included
-in the plugin.
+Before deployment user has to download and install the Fuel GCS plugin into
+Fuel Master. Driver inclusion and configuration will be done by Puppet
+manifests included in the plugin.
 
 The Cinder backup driver for GCS is included in Cinder package since Mitaka
 OpenStack release. Fuel GCS plugin should support environments with either LVM
 or Ceph used as a block storage.
 
-Before deploying an environment the Fuel GCS plugin has to be configured in Fuel UI or
-Fuel API.
+Before deploying an environment the Fuel GCS plugin has to be configured in
+Fuel UI or Fuel API.
 
 The Fuel GCS plugin will deploy changes in the following way
 
-* Create a credentials file on all cinder nodes with resctrive permissions, readable only by Cinder
+* Create a credentials file on all cinder nodes with resctrive permissions,
+  readable only by Cinder
 * Install python packages for Google Cloud Storage client on cinder nodes
 * Modify cinder.conf:
 
@@ -462,10 +463,11 @@ Work Items
 Dependencies
 ============
 
-* At least Fuel 9.0
-* At least OpenStack Mitaka
-* Internet connection on Cinder and Compute nodes
-* file with GCS credentials uploaded to Fuel master node
+* Fuel 9.0
+* Ubuntu 14.04
+* OpenStack Mitaka
+* Internet connection on Cinder nodes
+* Valid GCS credentials
 
 Testing
 =======
