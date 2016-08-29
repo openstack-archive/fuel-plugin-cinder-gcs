@@ -23,7 +23,6 @@ class gcs::config {
     'DEFAULT/backup_gcs_enable_progress_timer': value   => $gcs::settings['backup_gcs_enable_progress_timer'];
     'DEFAULT/backup_gcs_storage_class':         value   => $gcs::settings['backup_gcs_storage_class'];
     'DEFAULT/backup_gcs_user_agent':            value   => $gcs::settings['backup_gcs_user_agent'];
-    'DEFAULT/backup_gcs_credential_file':       value   => $gcs::settings['backup_gcs_credential_file'];
     'DEFAULT/backup_gcs_block_size':            value   => $gcs::settings['backup_gcs_block_size'];
     'DEFAULT/backup_gcs_object_size':           value   => $gcs::settings['backup_gcs_object_size'];
     'DEFAULT/backup_gcs_writer_chunk_size':     value   => $gcs::settings['backup_gcs_writer_chunk_size'];
