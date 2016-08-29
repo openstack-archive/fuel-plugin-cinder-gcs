@@ -2,8 +2,10 @@
 Google Cloud Storage(GCS) Fuel plugin
 =====================================
 
-Google Cloud Storage(GCS) Fuel plugin allows Fuel to deploy Mirantis OpenStack with
-a possibility to store VM backups in Google Cloud Storage using Cinder Google Cloud Storage backup
+Google Cloud Storage(GCS) Fuel plugin allows Fuel to deploy Mirantis OpenStack
+with
+a possibility to store VM backups in Google Cloud Storage using Cinder Google
+Cloud Storage backup
 driver.
 
 Problem description
@@ -24,12 +26,13 @@ Proposed changes
 Develop Fuel plugin to automate Cinder configuration
 for using GCS backup driver.
 
-VMs backups are stored as objects in object storages like Swift or Ceph.
+VMs backups are stored as objects in object storage like Swift or Ceph.
 Also other objects are stored in object storage. Fuel GCS plugin impacts only
 backups. Other objects will be stored in the object storage selected during
 the environment creation.
 
-Before deployment user has to download and install the Fuel GCS plugin into Fuel Master.
+Before deployment user has to download and install the Fuel GCS plugin into Fuel
+Master.
 Driver inclusion and configuration will be done by Puppet manifests included
 in the plugin.
 
@@ -37,12 +40,14 @@ The Cinder backup driver for GCS is included in Cinder package since Mitaka
 OpenStack release. Fuel GCS plugin should support environments with either LVM
 or Ceph used as a block storage.
 
-Before deploying an environment the Fuel GCS plugin has to be configured in Fuel UI or
+Before deploying an environment the Fuel GCS plugin has to be configured in Fuel
+UI or
 Fuel API.
 
 The Fuel GCS plugin will deploy changes in the following way
 
-* Create a credentials file on all cinder nodes with resctrive permissions, readable only by Cinder
+* Create a credentials file on all cinder nodes with respective permissions,
+* readable only by Cinder
 * Install python packages for Google Cloud Storage client on cinder nodes
 * Modify cinder.conf:
 
@@ -116,14 +121,14 @@ The settings are:
     https://cloud.google.com/storage/docs/bucket-locations
   * type: text
   * default value: 'us'
-  * valid values: alfanumeric with dashes and underscores
+  * valid values: alphanumeric with dashes and underscores
 
 * GCS Storage Class
 
   * name: backup_gcs_storage_class
   * label: GCS Storage Class
   * description: Storage class of GCS bucket
-  * type: dropdown list
+  * type: drop-down list
   * default value: 'NEARLINE'
   * list values: STANDARD, NEARLINE , DURABLE_REDUCED_AVAILABILITY
 
@@ -148,7 +153,7 @@ The settings are:
 * GCS Privare Key
 
   * name: gcs_private_key
-  * label: GCS Privare Key
+  * label: GCS Private Key
   * description: private_key parameter value from the GCS credentials file.
   * type: text
   * default value: ''
@@ -234,7 +239,7 @@ The settings are:
   * name: backup_gcs_block_size
   * label: GCS Block Size
   * description: The change tracking size for incremental backup in bytes.
-    Deault is 32768
+    Default is 32768
   * type: text
   * default value: 32768
   * valid values: positive integer
@@ -291,7 +296,7 @@ The settings are:
 
   * name: backup_gcs_retry_error_codes
   * label: GCS Retry Error Codes
-  * description: A comma sepaated list of GCS error codes for which
+  * description: A comma separated list of GCS error codes for which
     to initiate a retry. Default is 429
   * type: text
   * default value: 429
@@ -515,8 +520,8 @@ Testing
     - Verify all default values are correct
     - Manual verification of plugin UI dashboard
 
-Acceptance criterias
---------------------
+Acceptance criteria
+-------------------
 
 * A VM disk backup can be:
 
@@ -535,4 +540,5 @@ References
 
 OpenStack users: Backup your Cinder volumes to Google Cloud Storage
 https://cloudplatform.googleblog.com/2016/04/OpenStack-users-backup-your-Cinder-volumes-to-Google-Cloud-Storage.html
+
 
