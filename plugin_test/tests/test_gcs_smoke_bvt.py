@@ -14,7 +14,6 @@
 
 """Module with set of basic test cases."""
 
-from proboscis.asserts import assert_equal
 from proboscis import test
 
 from fuelweb_test.helpers.decorators import log_snapshot_after_test
@@ -89,32 +88,29 @@ class GcsTestClass(GcsTestBase):
         """Deploy HA cluster with GCS plugin installed and enabled.
 
         Scenario:
-            1. Create cluster
-            2. Add 3 node with controller role
-            3. Add 1 node with compute role
-            4. Add 1 node with cinder role
-            5. Install GCS plugin
-            6. Deploy the cluster
-            7. Run network verification
+            1. Install GCS plugin
+            2. Create an environment
+            3. Add 3 nodes with controller role
+            4. Add a node with compute role
+            5. Add a node with cinder role
+            6. Configure GCS plugin
+            7. Deploy the cluster
             8. Run OSTF
+            9. Verify GCS plugin
         """
         self.env.revert_snapshot("ready_with_5_slaves")
 
-        logger.info('Creating GCS HA cluster...')
-        segment_type = 'vlan'
+        self.show_step(1)
+        self.install_plugin()
+
+        self.show_step(2)
         cluster_id = self.fuel_web.create_cluster(
             name=self.__class__.__name__,
-            mode=DEPLOYMENT_MODE,
-            settings={
-                "net_provider": 'neutron',
-                "net_segment_type": segment_type,
-                'tenant': gcs_settings.default_tenant,
-                'user': gcs_settings.default_user,
-                'password': gcs_settings.default_user_pass,
-                'assign_to_all_nodes': True
-            }
-        )
+            mode=DEPLOYMENT_MODE)
 
+        self.show_step(3)
+        self.show_step(4)
+        self.show_step(5)
         self.fuel_web.update_nodes(
             cluster_id,
             {
@@ -126,25 +122,19 @@ class GcsTestClass(GcsTestBase):
             }
         )
 
-        self.install_plugin()
+        self.show_step(6)
         self.fuel_web.update_plugin_settings(cluster_id,
                                              gcs_settings.plugin_name,
                                              gcs_settings.plugin_version,
                                              gcs_settings.options)
 
-        cluster = self.fuel_web.client.get_cluster(cluster_id)
-        assert_equal(str(cluster['net_provider']), 'neutron')
-        self.fuel_web.verify_network(cluster_id)
-
+        self.show_step(7)
         self.fuel_web.deploy_cluster_wait(
             cluster_id,
             check_services=False
         )
 
-        self.fuel_web.security.verify_firewall(cluster_id)
-
+        self.show_step(8)
         self.fuel_web.run_ostf(
             cluster_id=cluster_id,
-            test_sets=['smoke', 'sanity', 'ha', 'tests_platform',
-                       'cloudvalidation'])
-        self.env.make_snapshot("gcs_bvt")
+            test_sets=['smoke', 'sanity', 'ha'])
