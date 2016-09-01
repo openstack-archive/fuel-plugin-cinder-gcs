@@ -12,3 +12,17 @@
     timeout: 300
   condition:
     yaql_exp: $.storage.volumes_ceph or ('cinder' in $.roles )
+
+- id: gcs_horizon
+  type: puppet
+  role: ['primary-controller','controller']
+  requires: [deploy_start]
+  version: 2.0.0
+  cross-depends:
+    - name: gcs_config
+      role: self
+  parameters:
+    puppet_manifest: puppet/manifests/gcs_horizon.pp
+    puppet_modules: puppet/modules:/etc/puppet/modules
+    timeout: 300
+

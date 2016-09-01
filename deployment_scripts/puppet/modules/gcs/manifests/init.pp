@@ -20,6 +20,7 @@ class gcs {
   $credential_file          = '/var/lib/cinder/credentials.json'
   $pip_packages             = ['google-api-python-client']
   $python_package_provider  = ['python-pip']
+  $configure_horizon        = true
 
   if $plugin_hash['backup_gcs_advanced_settings'] {
     $settings = $plugin_hash
