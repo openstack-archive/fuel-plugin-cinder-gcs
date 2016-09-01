@@ -22,7 +22,7 @@ from helpers.gcs_base import GcsTestBase
 from helpers import gcs_settings
 from fuelweb_test.settings import DEPLOYMENT_MODE
 from fuelweb_test import logger
-
+from tests.test_plugin_check import TestPluginCheck
 
 @test(groups=["test_gcs_all"])
 class GcsTestClass(GcsTestBase):
@@ -138,3 +138,6 @@ class GcsTestClass(GcsTestBase):
         self.fuel_web.run_ostf(
             cluster_id=cluster_id,
             test_sets=['smoke', 'sanity', 'ha'])
+
+        self.show_step(9)
+        TestPluginCheck(self).plugin_check()
