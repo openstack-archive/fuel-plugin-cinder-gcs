@@ -25,7 +25,7 @@ from fuelweb_test import logger
 from tests.test_plugin_check import TestPluginCheck
 
 
-@test(groups=["test_gcs_all"])
+@test(groups=["gcs_smoke_bvt_tests"])
 class GcsTestClass(GcsTestBase):
     """GcsTestBase."""  # TODO(unknown) documentation
 
@@ -91,13 +91,12 @@ class GcsTestClass(GcsTestBase):
         Scenario:
             1. Install GCS plugin
             2. Create an environment
-            3. Add 3 nodes with controller role
-            4. Add a node with compute role
-            5. Add a node with cinder role
-            6. Configure GCS plugin
-            7. Deploy the cluster
-            8. Run OSTF
-            9. Verify GCS plugin
+            3. Add 3 nodes with controller+ceph-osd roles
+            4. Add 2 nodes with compute+ceph-osd role
+            5. Configure GCS plugin
+            6. Deploy the cluster
+            7. Run OSTF
+            8. Verify GCS plugin
         """
         self.env.revert_snapshot("ready_with_5_slaves")
 
@@ -107,38 +106,44 @@ class GcsTestClass(GcsTestBase):
         self.show_step(2)
         cluster_id = self.fuel_web.create_cluster(
             name=self.__class__.__name__,
-            mode=DEPLOYMENT_MODE)
-
-        self.show_step(3)
-        self.show_step(4)
-        self.show_step(5)
-        self.fuel_web.update_nodes(
-            cluster_id,
-            {
-                'slave-01': ['controller'],
-                'slave-02': ['controller'],
-                'slave-03': ['controller'],
-                'slave-04': ['compute'],
-                'slave-05': ['cinder']
+            settings={
+                'images_ceph': True,
+                'volumes_ceph': True,
+                'ephemeral_ceph': True,
+                'objects_ceph': True,
+                'volumes_lvm': False
             }
         )
 
-        self.show_step(6)
+        self.show_step(3)
+        self.show_step(4)
+        self.fuel_web.update_nodes(
+            cluster_id,
+            {
+                'slave-01': ['controller', 'ceph-osd'],
+                'slave-02': ['controller', 'ceph-osd'],
+                'slave-03': ['controller', 'ceph-osd'],
+                'slave-04': ['compute', 'ceph-osd'],
+                'slave-05': ['compute', 'ceph-osd'],
+            }
+        )
+
+        self.show_step(5)
         self.fuel_web.update_plugin_settings(cluster_id,
                                              gcs_settings.plugin_name,
                                              gcs_settings.plugin_version,
                                              gcs_settings.options)
 
-        self.show_step(7)
+        self.show_step(6)
         self.fuel_web.deploy_cluster_wait(
             cluster_id,
             check_services=False
         )
 
-        self.show_step(8)
+        self.show_step(7)
         self.fuel_web.run_ostf(
             cluster_id=cluster_id,
             test_sets=['smoke', 'sanity', 'ha'])
 
-        self.show_step(9)
+        self.show_step(8)
         TestPluginCheck(self).plugin_check()
