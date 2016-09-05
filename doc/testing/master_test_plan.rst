@@ -219,5 +219,7 @@ An ordinary test cycle for each iteration consists of the following steps:
 6. Test scope
 -------------
 
-.. include:: test_suite_somke_bvt.rst
+.. include:: test_suite_smoke_bvt.rst
 .. include:: test_gcs_gui.rst
+.. include:: test_suite_integration.rst
+.. include:: test_suite_functional.rst
