@@ -61,12 +61,12 @@ class TestPluginCheck(object):
         logger.info('Create volume ...')
         volume = os_volumes.create(size=1)
         wait(lambda: os_volumes.get(volume.id).status == 'available',
-             timeout=60, timeout_msg='Volume is not created')
+             timeout=120, timeout_msg='Volume is not created')
 
         logger.info('Create backup ...')
         backup = os_cinder.backups.create(volume.id)
         wait(lambda: os_cinder.backups.get(backup.id).status == 'available',
-             timeout=120, timeout_msg='Backup is not created')
+             timeout=300, timeout_msg='Backup is not created')
 
         logger.info('Verify type of backup ...')
         assert_true(backup.container == options['backup_gcs_bucket/value'],
@@ -75,15 +75,15 @@ class TestPluginCheck(object):
         logger.info('Restore volume from backup ...')
         restore = os_cinder.restores.restore(backup.id)
         wait(lambda: os_volumes.get(restore.volume_id).status == 'available',
-             timeout=120, timeout_msg='Backup is not restored')
+             timeout=300, timeout_msg='Backup is not restored')
 
         logger.info('Delete backup ...')
         os_cinder.backups.delete(backup.id)
         wait(lambda: len(os_cinder.backups.list()) == 0,
-             timeout=120, timeout_msg='Backup is not deleted')
+             timeout=300, timeout_msg='Backup is not deleted')
 
         logger.info('Delete volumes ...')
         os_volumes.delete(restore.volume_id)
         os_volumes.delete(volume.id)
         wait(lambda: len(os_volumes.list()) == 0,
-             timeout=120, timeout_msg='Volumes are not deleted')
+             timeout=300, timeout_msg='Volumes are not deleted')
