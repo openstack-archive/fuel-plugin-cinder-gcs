@@ -15,11 +15,11 @@ import sys
 
 import os
 import re
-from nose.plugins import Plugin
+from nose import plugins
 from paramiko.transport import _join_lingering_threads
 
 
-class CloseSSHConnectionsPlugin(Plugin):
+class CloseSSHConnectionsPlugin(plugins.Plugin):
     """Closes all paramiko's ssh connections after each test case.
     Plugin fixes proboscis disability to run cleanup of any kind.
     'afterTest' calls _join_lingering_threads function from paramiko,

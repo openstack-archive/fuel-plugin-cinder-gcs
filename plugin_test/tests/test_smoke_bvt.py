@@ -17,19 +17,19 @@
 from proboscis import test
 
 from fuelweb_test.helpers.decorators import log_snapshot_after_test
-from fuelweb_test.tests.base_test_case import SetupEnvironment
-from helpers.gcs_base import GcsTestBase
+from fuelweb_test.tests import base_test_case
+from helpers import gcs_base
 from helpers import gcs_settings
 from fuelweb_test.settings import DEPLOYMENT_MODE
 from fuelweb_test import logger
-from tests.test_plugin_check import TestPluginCheck
+from tests import test_plugin_check
 
 
 @test(groups=["gcs_smoke_bvt_tests"])
-class GcsTestClass(GcsTestBase):
+class GcsTestClass(gcs_base.GcsTestBase):
     """GcsTestBase."""  # TODO(unknown) documentation
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_3],
+    @test(depends_on=[base_test_case.SetupEnvironment.prepare_slaves_3],
           groups=["gcs_smoke"])
     @log_snapshot_after_test
     def gcs_smoke(self):
@@ -82,7 +82,7 @@ class GcsTestClass(GcsTestBase):
 
         self.env.make_snapshot("gcs_smoke")
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_5],
+    @test(depends_on=[base_test_case.SetupEnvironment.prepare_slaves_5],
           groups=["gcs_bvt"])
     @log_snapshot_after_test
     def gcs_bvt(self):
@@ -146,4 +146,4 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(8)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()

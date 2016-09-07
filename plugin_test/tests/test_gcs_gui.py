@@ -17,18 +17,18 @@
 from proboscis import test
 
 from fuelweb_test.helpers.decorators import log_snapshot_after_test
-from fuelweb_test.tests.base_test_case import SetupEnvironment
-from helpers.gcs_base import GcsTestBase
+from fuelweb_test.tests import base_test_case
+from helpers import gcs_base
 from helpers import gcs_settings
 from fuelweb_test.settings import DEPLOYMENT_MODE
 from fuelweb_test import logger
 
 
 @test(groups=["test_gcs_all"])
-class TestGCSPlugin(GcsTestBase):
+class TestGCSPlugin(gcs_base.GcsTestBase):
     """TestGCSPlugin."""  # TODO(unknown) documentation
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_3],
+    @test(depends_on=[base_test_case.SetupEnvironment.prepare_slaves_3],
           groups=["gcs_gui_defaults"])
     @log_snapshot_after_test
     def gcs_gui_defaults(self):
