@@ -17,17 +17,17 @@
 from proboscis import test
 
 from fuelweb_test.helpers.decorators import log_snapshot_after_test
-from fuelweb_test.tests.base_test_case import SetupEnvironment
-from helpers.gcs_base import GcsTestBase
+from fuelweb_test.tests import base_test_case
+from helpers import gcs_base
 from helpers import gcs_settings
-from tests.test_plugin_check import TestPluginCheck
+from tests import test_plugin_check
 
 
 @test(groups=["gcs_integration_tests"])
-class GcsTestClass(GcsTestBase):
+class GcsTestClass(gcs_base.GcsTestBase):
     """GcsTestBase."""  # TODO(unknown) documentation
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_5],
+    @test(depends_on=[base_test_case.SetupEnvironment.prepare_slaves_5],
           groups=["gcs_ceph"])
     @log_snapshot_after_test
     def gcs_ceph(self):
@@ -95,9 +95,9 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(9)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_5],
+    @test(depends_on=[base_test_case.SetupEnvironment.prepare_slaves_5],
           groups=["gcs_cinder_multirole"])
     @log_snapshot_after_test
     def gcs_cinder_multirole(self):
@@ -158,9 +158,9 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(8)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_5],
+    @test(depends_on=[base_test_case.SetupEnvironment.prepare_slaves_5],
           groups=["gcs_cinder_ceph_multirole"])
     @log_snapshot_after_test
     def gcs_cinder_ceph_multirole(self):
@@ -221,9 +221,9 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(7)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_5],
+    @test(depends_on=[base_test_case.SetupEnvironment.prepare_slaves_5],
           groups=["gcs_ceilometer"])
     @log_snapshot_after_test
     def gcs_ceilometer(self):
@@ -283,4 +283,4 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'tests_platform'])
 
         self.show_step(7)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()

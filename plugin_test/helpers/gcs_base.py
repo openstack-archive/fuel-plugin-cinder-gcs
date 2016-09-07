@@ -19,13 +19,13 @@ import os
 from proboscis.asserts import assert_equal
 from proboscis.asserts import assert_false
 
-from fuelweb_test.tests.base_test_case import TestBasic
+from fuelweb_test.tests import base_test_case
 from fuelweb_test import logger
 from fuelweb_test.helpers import utils
 from helpers import gcs_settings
 
 
-class GcsTestBase(TestBasic):
+class GcsTestBase(base_test_case.TestBasic):
     """GcsTestBase.
 
     Base class for GCS verification testing, methods in this class will be used

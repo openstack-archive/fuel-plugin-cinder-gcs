@@ -17,17 +17,17 @@
 from proboscis import test
 
 from fuelweb_test.helpers.decorators import log_snapshot_after_test
-from fuelweb_test.tests.base_test_case import SetupEnvironment
-from helpers.gcs_base import GcsTestBase
+from fuelweb_test.tests import base_test_case
+from helpers import gcs_base
 from helpers import gcs_settings
-from tests.test_plugin_check import TestPluginCheck
+from tests import test_plugin_check
 
 
 @test(groups=["gcs_functional_tests"])
-class GcsTestClass(GcsTestBase):
+class GcsTestClass(gcs_base.GcsTestBase):
     """GcsTestBase."""  # TODO(unknown) documentation
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_5],
+    @test(depends_on=[base_test_case SetupEnvironment.prepare_slaves_5],
           groups=["gcs_delete_add_controller"])
     @log_snapshot_after_test
     def gcs_delete_add_controller(self):
@@ -101,7 +101,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(7)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(8)
         self.fuel_web.update_nodes(
@@ -122,7 +122,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(11)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(12)
         self.fuel_web.update_nodes(
@@ -142,9 +142,9 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(15)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_3],
+    @test(depends_on=[base_test_case SetupEnvironment.prepare_slaves_3],
           groups=["gcs_delete_add_compute"])
     @log_snapshot_after_test
     def gcs_delete_add_compute(self):
@@ -212,7 +212,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(7)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(8)
         self.fuel_web.update_nodes(
@@ -233,7 +233,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(11)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(12)
         self.fuel_web.update_nodes(
@@ -253,9 +253,9 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(15)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_3],
+    @test(depends_on=[base_test_case SetupEnvironment.prepare_slaves_3],
           groups=["gcs_delete_add_cinder"])
     @log_snapshot_after_test
     def gcs_delete_add_cinder(self):
@@ -319,7 +319,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(7)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(8)
         self.fuel_web.update_nodes(
@@ -340,7 +340,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(11)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(12)
         self.fuel_web.update_nodes(
@@ -360,9 +360,9 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(15)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_3],
+    @test(depends_on=[base_test_case SetupEnvironment.prepare_slaves_3],
           groups=["gcs_delete_add_single_cinder"])
     @log_snapshot_after_test
     def gcs_delete_add_single_cinder(self):
@@ -429,7 +429,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(7)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(8)
         self.fuel_web.update_nodes(
@@ -467,9 +467,9 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity'])
 
         self.show_step(14)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
-    @test(depends_on=[SetupEnvironment.prepare_slaves_5],
+    @test(depends_on=[base_test_case SetupEnvironment.prepare_slaves_5],
           groups=["gcs_add_ceph"])
     @log_snapshot_after_test
     def gcs_add_ceph(self):
@@ -538,7 +538,7 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(7)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
 
         self.show_step(8)
         self.fuel_web.update_nodes(
@@ -556,4 +556,4 @@ class GcsTestClass(GcsTestBase):
             test_sets=['smoke', 'sanity', 'ha'])
 
         self.show_step(11)
-        TestPluginCheck(self).plugin_check()
+        test_plugin_check.TestPluginCheck(self).plugin_check()
