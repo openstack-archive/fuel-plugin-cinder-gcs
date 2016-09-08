@@ -1,0 +1,8 @@
+Code-Review+2: Andrian Noga <anoga@mirantis.com>
+Workflow+1: Andrian Noga <anoga@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Thu, 08 Sep 2016 14:27:57 +0000
+Reviewed-on: https://review.openstack.org/362165
+Project: openstack/fuel-plugin-cinder-gcs
+Branch: refs/heads/master
