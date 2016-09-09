@@ -32,4 +32,5 @@ Use GCS Fuel Plugin
 .. toctree::
    :maxdepth: 2
 
+   mistral
    troubleshooting
