@@ -223,3 +223,6 @@ An ordinary test cycle for each iteration consists of the following steps:
 .. include:: test_gcs_gui.rst
 .. include:: test_suite_integration.rst
 .. include:: test_suite_functional.rst
+.. include:: test_suite_destructive.rst
+.. include:: test_suite_gui_negative.rst
+.. include:: test_suite_system.rst
