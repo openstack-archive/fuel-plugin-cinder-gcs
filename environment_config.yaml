@@ -73,7 +73,7 @@ attributes:
     weight: 53
     value: ''
     regex:
-      source: '^.+@(.*\..+)+$'
+      source: '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
       error: 'Please enter correct e-mail address'
   gcs_client_id:
     label: "Client ID"
@@ -91,7 +91,7 @@ attributes:
     weight: 55
     value: 'https://accounts.google.com/o/oauth2/auth'
     regex:
-      source: '^https:\/\/.+$'
+      source: '\w+:\/\/[\w\-.\/]+(?::\d+)?[\w\-.\/]+$'
       error: 'Please enter valid URI'
   gcs_token_uri:
     label: "Token URI"
@@ -100,7 +100,7 @@ attributes:
     weight: 56
     value: 'https://accounts.google.com/o/oauth2/token'
     regex:
-      source: '^https:\/\/.+$'
+      source: '\w+:\/\/[\w\-.\/]+(?::\d+)?[\w\-.\/]+$'
       error: 'Please enter valid URI'
   gcs_auth_provider_x509_cert_url:
     label: "Auth Provider X509 Cert URL"
@@ -109,7 +109,7 @@ attributes:
     weight: 57
     value: 'https://www.googleapis.com/oauth2/v1/certs'
     regex:
-      source: '^https:\/\/.+$'
+      source: '\w+:\/\/[\w\-.\/]+(?::\d+)?[\w\-.\/]+$'
       error: 'Please enter valid URI'
   gcs_client_x509_cert_url:
     label: "Client X509 Cert URL"
@@ -118,7 +118,7 @@ attributes:
     weight: 58
     value: ''
     regex:
-      source: '^https:\/\/.+$'
+      source: '\w+:\/\/[\w\-.\/]+(?::\d+)?[\w\-.\/%]+$'
       error: 'Please enter valid URI'
   backup_gcs_advanced_settings:
     type: "checkbox"
