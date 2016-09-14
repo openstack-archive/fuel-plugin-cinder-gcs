@@ -50,7 +50,7 @@ attributes:
       error:  'The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
   gcs_private_key_id:
     label: "Private Key ID"
-    description: "Private_key_id parameter value from the GCS credentials file."
+    description: "private_key_id parameter value from the GCS credentials file."
     type: text
     weight: 51
     value: ''
@@ -59,7 +59,7 @@ attributes:
       error: 'Only alphanumberic charaters are allowed'
   gcs_private_key:
     label: "Private Key"
-    description: "Private_key parameter value from the GCS credentials file."
+    description: "private_key parameter value from the GCS credentials file."
     type: password
     weight: 52
     value: ''
@@ -68,7 +68,7 @@ attributes:
       error: 'Should not be empty'
   gcs_client_email:
     label: "Client E-mail"
-    description: "Client_email parameter value from the GCS credentials file."
+    description: "client_email parameter value from the GCS credentials file."
     type: text
     weight: 53
     value: ''
@@ -77,7 +77,7 @@ attributes:
       error: 'Please enter correct e-mail address'
   gcs_client_id:
     label: "Client ID"
-    description: "Client_id parameter value from the GCS credentials file."
+    description: "client_id parameter value from the GCS credentials file."
     type: text
     weight: 54
     value: ''
@@ -86,7 +86,7 @@ attributes:
       error: 'Only integers [1-9] are allowed'
   gcs_auth_uri:
     label: "Auth URI"
-    description: "Auth_uri parameter value from the GCS credentials file."
+    description: "auth_uri parameter value from the GCS credentials file."
     type: text
     weight: 55
     value: 'https://accounts.google.com/o/oauth2/auth'
@@ -95,7 +95,7 @@ attributes:
       error: 'Please enter valid URI'
   gcs_token_uri:
     label: "Token URI"
-    description: "Token_uri parameter value from the GCS credentials file."
+    description: "token_uri parameter value from the GCS credentials file."
     type: text
     weight: 56
     value: 'https://accounts.google.com/o/oauth2/token'
@@ -104,7 +104,7 @@ attributes:
       error: 'Please enter valid URI'
   gcs_auth_provider_x509_cert_url:
     label: "Auth Provider X509 Cert URL"
-    description: "Auth_provider_x509_cert_url parameter value from the GCS credentials file."
+    description: "auth_provider_x509_cert_url parameter value from the GCS credentials file."
     type: text
     weight: 57
     value: 'https://www.googleapis.com/oauth2/v1/certs'
@@ -113,7 +113,7 @@ attributes:
       error: 'Please enter valid URI'
   gcs_client_x509_cert_url:
     label: "Client X509 Cert URL"
-    description: "Client_x509_cert_url parameter value from the GCS credentials file."
+    description: "client_x509_cert_url parameter value from the GCS credentials file."
     type: text
     weight: 58
     value: ''
