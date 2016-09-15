@@ -46,7 +46,12 @@ two parts:
     .. image:: images/settings.png
 
   * The project ID
-  * The bucket name to store backup data
+  * The default bucket name to store backup data.
+    The bucket is created if not exists. Used as *container* parameter value
+    when Cinder CLI or API is invoked for creating a backup.
+    *Note for Horizon users:* make sure *Container Name* in
+    *Create Volume Backup* window is filled with the appropriate bucket name.
+    Improper or empty *Container Name* can cause a new bucket creation.
   * The storage class for the bucket, can be selected from drop-down list
   * Bucket location, a list of locations can be found in
     `Google Cloud storage documentation <https://cloud.google.com/storage/docs/bucket-locations>`_

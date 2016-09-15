@@ -97,13 +97,15 @@ The settings are:
   * default value: ''
   * valid values: not empty
 
-* GCS Bucket
+* Default GCS Bucket name
 
   * name: backup_gcs_bucket
-  * label: GCS Bucket
-  * description: GCS bucket name to use for backup. Please refer to
-    the official bucket naming guidelines
-    https://cloud.google.com/storage/docs/naming
+  * label: Default GCS Bucket name
+  * description: Default GCS bucket name to use for backups. The bucket is
+    created if not exists. Please refer to the official bucket naming guidelines
+    https://cloud.google.com/storage/docs/naming .
+    Used as *container* parameter value when Cinder CLI or API is invoked for
+    creating a backup.
   * type: text
   * default value: ''
   * valid values: not empty
