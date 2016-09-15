@@ -10,13 +10,13 @@ attributes:
       error:  'The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
   backup_gcs_bucket:
     value: ''
-    label: 'GCS bucket name'
-    description: ''
+    label: 'Default GCS bucket name'
+    description: 'Default GCS bucket name to use for backups. The bucket is created if not exists. Please refer to the official bucket naming guidelines https://cloud.google.com/storage/docs/naming .Used as container parameter value when Cinder CLI or API is invoked for creating a backup.'
     weight: 15
     type: "text"
     regex:
       source: '^[A-Za-z\d_-]+$'
-      error:  'The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
+      error:  'Default GCS bucket name to use for backups. The bucket is created if not exists. Please refer to the official bucket naming guidelines https://cloud.google.com/storage/docs/naming .Used as container parameter value when Cinder CLI or API is invoked for creating a backup. The value should not be empty. Only letters, digits, underscore and dash symbols are allowed.'
   backup_gcs_storage_class:
     value: 'NEARLINE'
     label: 'GCS storage class'
