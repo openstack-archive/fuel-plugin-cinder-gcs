@@ -7,7 +7,7 @@
     - name: /.*cinder.*/
       role: self
   parameters:
-    puppet_manifest: puppet/manifests/gcs_conf.pp
+    puppet_manifest: puppet/manifests/config.pp
     puppet_modules: puppet/modules:/etc/puppet/modules
     timeout: 300
   condition:
@@ -22,7 +22,7 @@
     - name: gcs_config
       role: self
   parameters:
-    puppet_manifest: puppet/manifests/gcs_horizon.pp
+    puppet_manifest: puppet/manifests/horizon.pp
     puppet_modules: puppet/modules:/etc/puppet/modules
     timeout: 300
 
