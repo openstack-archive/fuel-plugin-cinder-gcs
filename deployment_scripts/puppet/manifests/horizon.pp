@@ -12,8 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-notice('MODULAR:gcs_conf.pp')
+notice('MODULAR: fuel-plugin-cinder-gcs/gcs_horizon.pp')
 include gcs
-class { 'gcs::config': }
-class { 'gcs::package_utils': }
-class { 'gcs::services': }
+class { 'gcs::horizon': }
