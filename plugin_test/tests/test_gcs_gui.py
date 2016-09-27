@@ -19,6 +19,9 @@ from proboscis import test
 from fuelweb_test.helpers.decorators import log_snapshot_after_test
 from fuelweb_test.tests.base_test_case import SetupEnvironment
 from helpers.gcs_base import GcsTestBase
+from helpers import gcs_settings
+from fuelweb_test.settings import DEPLOYMENT_MODE
+from fuelweb_test import logger
 
 
 @test(groups=["test_gcs_all"])
@@ -34,10 +37,34 @@ class TestGCSPlugin(GcsTestBase):
         Scenario:
             1. Create cluster
             2. Install GCS plugin
-            3. Verify default values
+            3. Create cluster
+            4. Verify default values
         """
         self.env.revert_snapshot("ready_with_3_slaves")
-        cluster_id = self.fuel_web.get_last_created_cluster()
+
+        logger.info('Creating GCS non HA cluster...')
+        segment_type = 'vlan'
+        cluster_id = self.fuel_web.create_cluster(
+            name=self.__class__.__name__,
+            mode=DEPLOYMENT_MODE,
+            settings={
+                "net_provider": 'neutron',
+                "net_segment_type": segment_type,
+                'tenant': gcs_settings.default_tenant,
+                'user': gcs_settings.default_user,
+                'password': gcs_settings.default_user_pass,
+                'assign_to_all_nodes': True
+            }
+        )
+
+        self.fuel_web.update_nodes(
+            cluster_id,
+            {
+                'slave-01': ['controller'],
+                'slave-02': ['compute'],
+                'slave-03': ['cinder']
+            }
+        )
 
         self.install_plugin()
         self.verify_defaults(cluster_id)

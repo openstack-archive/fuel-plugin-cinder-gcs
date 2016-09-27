@@ -29,7 +29,8 @@ Steps
     1. Create cluster
     2. Upload plugin to the master node
     3. Install plugin
-    4. Verify default values
+    4. Create cluster
+    5. Verify default values
 
 Expected results
 ################

@@ -45,7 +45,7 @@ class GcsTestClass(GcsTestBase):
         """
         self.env.revert_snapshot("ready_with_3_slaves")
 
-        logger.info('Creating GCS HA cluster...')
+        logger.info('Creating GCS non HA cluster...')
         segment_type = 'vlan'
         cluster_id = self.fuel_web.create_cluster(
             name=self.__class__.__name__,
