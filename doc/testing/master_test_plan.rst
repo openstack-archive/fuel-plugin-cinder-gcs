@@ -226,3 +226,4 @@ An ordinary test cycle for each iteration consists of the following steps:
 .. include:: test_suite_destructive.rst
 .. include:: test_suite_gui_negative.rst
 .. include:: test_suite_system.rst
+.. include:: test_gcs_integration_with_mistral.rst
