@@ -48,7 +48,7 @@ default_values = {
     'backup_gcs_user_agent': 'gcscinder',
     'backup_gcs_reader_chunk_size': '2097152',
     'backup_gcs_num_retries': '3',
-    'metadata': True,
+    'metadata': False,
     'gcs_private_key': '',
     'gcs_private_key_id': '',
     'gcs_token_uri': 'https://accounts.google.com/o/oauth2/token',
