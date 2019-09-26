@@ -1,4 +1,3 @@
-fuel-plugin-cinder-gcs
-============
+# This repo has moved to OpenDev
 
-Plugin description
+It can now be found at [https://opendev.org/x/fuel-plugin-cinder-gcs](https://opendev.org/x/fuel-plugin-cinder-gcs)
